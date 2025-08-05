@@ -6,10 +6,14 @@
  * - Each alarm has active days (Mon, Wed, Fri, etc.)
  * - Simulated "today" logic - if today matches alarm's days, user can mark "already woke up"
  * - "Already woke up" only disables for today, tomorrow it's active again
+ * - Add alarm modal functionality
  */
 
 // Simulated "today" - change this to test different days
 const TODAY = "Wed";
+
+// Variable to store new alarm data (not saved yet)
+let newAlarm = {};
 
 // Alarm groups data structure - easy to scale and modify
 const alarmGroups = [
@@ -94,28 +98,35 @@ const alarmGroups = [
  */
 document.addEventListener('DOMContentLoaded', function() {
     renderAlarmList();
+    setupModalListeners();
     console.log(`App initialized. Today is simulated as: ${TODAY}`);
 });
 
 /**
- * Renders the complete alarm list with groups
+ * Renders the complete alarm list with properly organized groups
  */
 function renderAlarmList() {
     const container = document.getElementById('alarmList');
     container.innerHTML = '';
 
     alarmGroups.forEach(group => {
+        // Create group container
+        const groupContainer = document.createElement('div');
+        groupContainer.className = 'alarm-group';
+
         // Add group title
         const groupTitle = document.createElement('div');
         groupTitle.className = 'group-title';
         groupTitle.textContent = group.title;
-        container.appendChild(groupTitle);
+        groupContainer.appendChild(groupTitle);
 
         // Add each alarm in the group
         group.alarms.forEach(alarm => {
             const alarmElement = createAlarmElement(alarm);
-            container.appendChild(alarmElement);
+            groupContainer.appendChild(alarmElement);
         });
+
+        container.appendChild(groupContainer);
     });
 }
 
@@ -192,6 +203,128 @@ function createAlarmElement(alarm) {
 }
 
 /**
+ * Sets up modal event listeners
+ */
+function setupModalListeners() {
+    const addAlarmBtn = document.getElementById('addAlarmBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modal = document.getElementById('addAlarmModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalSave = document.getElementById('modalSave');
+
+    // Open modal
+    addAlarmBtn.addEventListener('click', openModal);
+
+    // Close modal
+    modalClose.addEventListener('click', closeModal);
+    modalCancel.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+    // Save alarm
+    modalSave.addEventListener('click', saveAlarm);
+}
+
+/**
+ * Opens the add alarm modal
+ */
+function openModal() {
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modal = document.getElementById('addAlarmModal');
+    
+    modalOverlay.classList.add('show');
+    modal.classList.add('show');
+    
+    // Reset form
+    resetModalForm();
+    
+    console.log('Add alarm modal opened');
+}
+
+/**
+ * Closes the add alarm modal
+ */
+function closeModal() {
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modal = document.getElementById('addAlarmModal');
+    
+    modalOverlay.classList.remove('show');
+    modal.classList.remove('show');
+    
+    console.log('Add alarm modal closed');
+}
+
+/**
+ * Resets the modal form to default values
+ */
+function resetModalForm() {
+    document.getElementById('alarmTime').value = '07:00';
+    document.getElementById('alarmLabel').value = '';
+    document.getElementById('alarmGroup').value = '';
+    
+    // Uncheck all days
+    const dayCheckboxes = document.querySelectorAll('.day-checkbox');
+    dayCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+/**
+ * Captures form data and stores it in newAlarm variable
+ */
+function saveAlarm() {
+    // Get form values
+    const time = document.getElementById('alarmTime').value;
+    const label = document.getElementById('alarmLabel').value;
+    const group = document.getElementById('alarmGroup').value;
+    
+    // Get selected days
+    const selectedDays = [];
+    const dayCheckboxes = document.querySelectorAll('.day-checkbox:checked');
+    dayCheckboxes.forEach(checkbox => {
+        selectedDays.push(checkbox.value);
+    });
+    
+    // Convert 24h time to 12h format
+    const timeFormatted = formatTime(time);
+    
+    // Store in newAlarm variable (not saving to actual data yet)
+    newAlarm = {
+        time: timeFormatted,
+        label: label || 'New Alarm',
+        activeDays: selectedDays,
+        group: group || 'Ungrouped',
+        isEnabled: true,
+        wokeUpToday: false
+    };
+    
+    console.log('New alarm data captured:', newAlarm);
+    console.log('Selected days:', selectedDays);
+    console.log('Group:', group || 'No group specified');
+    
+    // Close modal
+    closeModal();
+    
+    // Show confirmation (temporary)
+    alert(`Alarm data captured!\nTime: ${newAlarm.time}\nLabel: ${newAlarm.label}\nDays: ${selectedDays.join(', ')}\nGroup: ${newAlarm.group}\n\n(Not saved yet - just captured in 'newAlarm' variable)`);
+}
+
+/**
+ * Converts 24h time format to 12h format
+ */
+function formatTime(time24) {
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+}
+
+/**
  * Handles "already woke up" checkbox toggle
  * This simulates marking an alarm as completed for today only
  */
@@ -264,4 +397,12 @@ window.logCurrentState = function() {
             console.log(`  ${alarm.time} ${alarm.label} - ${status} ${reason}`);
         });
     });
+};
+
+/**
+ * Debug function to see captured new alarm data
+ * Call this from browser console: showNewAlarm()
+ */
+window.showNewAlarm = function() {
+    console.log('Captured new alarm data:', newAlarm);
 };
