@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Alarms</h1>
+        </header>
+        
+        <main class="alarm-list">
+            <div class="alarm-item">
+                <div class="alarm-time">07:00 AM</div>
+                <div class="alarm-label">Weekdays</div>
+                <div class="alarm-toggle">
+                    <input type="checkbox" id="alarm1" checked>
+                    <label for="alarm1" class="toggle-switch"></label>
+                </div>
+            </div>
+            
+            <div class="alarm-item">
+                <div class="alarm-time">08:30 AM</div>
+                <div class="alarm-label">Work Meeting</div>
+                <div class="alarm-toggle">
+                    <input type="checkbox" id="alarm2" checked>
+                    <label for="alarm2" class="toggle-switch"></label>
+                </div>
+            </div>
+            
+            <div class="alarm-item">
+                <div class="alarm-time">10:00 AM</div>
+                <div class="alarm-label">Coffee Break</div>
+                <div class="alarm-toggle">
+                    <input type="checkbox" id="alarm3">
+                    <label for="alarm3" class="toggle-switch"></label>
+                </div>
+            </div>
+            
+            <div class="alarm-item">
+                <div class="alarm-time">06:30 PM</div>
+                <div class="alarm-label">Gym Time</div>
+                <div class="alarm-toggle">
+                    <input type="checkbox" id="alarm4" checked>
+                    <label for="alarm4" class="toggle-switch"></label>
+                </div>
+            </div>
+            
+            <div class="alarm-item">
+                <div class="alarm-time">09:00 PM</div>
+                <div class="alarm-label">Wind Down</div>
+                <div class="alarm-toggle">
+                    <input type="checkbox" id="alarm5">
+                    <label for="alarm5" class="toggle-switch"></label>
+                </div>
+            </div>
+        </main>
+        
+        <button class="add-alarm-btn">+</button>
+    </div>
+</body>
+</html>
