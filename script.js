@@ -1,9 +1,9 @@
 /**
- * Enhanced Alarm List with Subtle Grouping
- * Maintains the original iOS/Android clean design while adding group functionality
+ * Enhanced Alarm List - Original Design with Subtle Grouping
+ * Maintains the exact original alarms and design, just adds grouping functionality
  */
 
-// Alarm data with groups - designed to look like the original but with group structure
+// Alarm data structured exactly like the original but with subtle groups
 const alarmData = {
     groups: [
         {
@@ -12,14 +12,14 @@ const alarmData = {
             offForToday: false,
             alarms: [
                 {
-                    id: 'alarm-1',
+                    id: 'alarm1',
                     time: '07:00 AM',
                     label: 'Weekdays',
                     isActive: true,
                     offForToday: false
                 },
                 {
-                    id: 'alarm-2',
+                    id: 'alarm2',
                     time: '08:30 AM',
                     label: 'Work Meeting',
                     isActive: true,
@@ -28,22 +28,15 @@ const alarmData = {
             ]
         },
         {
-            id: 'afternoon',
-            title: 'Afternoon',
+            id: 'day',
+            title: 'Day',
             offForToday: false,
             alarms: [
                 {
-                    id: 'alarm-3',
+                    id: 'alarm3',
                     time: '10:00 AM',
                     label: 'Coffee Break',
                     isActive: false,
-                    offForToday: false
-                },
-                {
-                    id: 'alarm-4',
-                    time: '06:30 PM',
-                    label: 'Gym Time',
-                    isActive: true,
                     offForToday: false
                 }
             ]
@@ -54,7 +47,14 @@ const alarmData = {
             offForToday: false,
             alarms: [
                 {
-                    id: 'alarm-5',
+                    id: 'alarm4',
+                    time: '06:30 PM',
+                    label: 'Gym Time',
+                    isActive: true,
+                    offForToday: false
+                },
+                {
+                    id: 'alarm5',
                     time: '09:00 PM',
                     label: 'Wind Down',
                     isActive: false,
@@ -66,14 +66,14 @@ const alarmData = {
 };
 
 /**
- * Renders the alarm list maintaining the original design aesthetic
+ * Renders alarm list maintaining original design but with subtle groups
  */
 function renderAlarmList() {
     const container = document.getElementById('alarmList');
     container.innerHTML = '';
 
     alarmData.groups.forEach(group => {
-        // Create subtle group header
+        // Create subtle group header (minimal design)
         const groupHeader = document.createElement('div');
         groupHeader.className = 'group-header';
         
@@ -91,26 +91,21 @@ function renderAlarmList() {
         
         groupHeader.appendChild(groupTitle);
         groupHeader.appendChild(groupCheckbox);
+        container.appendChild(groupHeader);
         
-        // Create group container
-        const groupContainer = document.createElement('div');
-        groupContainer.className = 'alarm-group';
-        groupContainer.appendChild(groupHeader);
-        
-        // Add alarms to this group
+        // Add alarms for this group
         group.alarms.forEach(alarm => {
             const alarmItem = createAlarmItem(alarm, group.offForToday);
-            groupContainer.appendChild(alarmItem);
+            container.appendChild(alarmItem);
         });
-        
-        container.appendChild(groupContainer);
     });
 }
 
 /**
- * Creates an alarm item that looks exactly like the original design
+ * Creates alarm item exactly like the original design
  */
 function createAlarmItem(alarm, groupOffForToday) {
+    // Main alarm item container
     const alarmItem = document.createElement('div');
     alarmItem.className = 'alarm-item';
     
@@ -120,9 +115,6 @@ function createAlarmItem(alarm, groupOffForToday) {
     }
 
     // Left side - alarm info (exactly like original)
-    const alarmInfo = document.createElement('div');
-    alarmInfo.className = 'alarm-info';
-    
     const alarmTime = document.createElement('div');
     alarmTime.className = 'alarm-time';
     alarmTime.textContent = alarm.time;
@@ -130,11 +122,8 @@ function createAlarmItem(alarm, groupOffForToday) {
     const alarmLabel = document.createElement('div');
     alarmLabel.className = 'alarm-label';
     alarmLabel.textContent = alarm.label;
-    
-    alarmInfo.appendChild(alarmTime);
-    alarmInfo.appendChild(alarmLabel);
 
-    // Right side - controls (small checkbox + main toggle, like original)
+    // Right side - controls 
     const alarmToggle = document.createElement('div');
     alarmToggle.className = 'alarm-toggle';
     
@@ -147,18 +136,18 @@ function createAlarmItem(alarm, groupOffForToday) {
     offTodayCheckbox.title = 'Off for today';
     offTodayCheckbox.addEventListener('change', (e) => handleAlarmOffTodayToggle(alarm.id, e.target.checked));
     
-    // Main toggle switch container (exactly like original)
+    // Main toggle switch (exactly like original)
     const toggleContainer = document.createElement('div');
     toggleContainer.className = 'toggle-switch-container';
     
     const mainToggle = document.createElement('input');
     mainToggle.type = 'checkbox';
-    mainToggle.id = `toggle-${alarm.id}`;
+    mainToggle.id = alarm.id;
     mainToggle.checked = alarm.isActive;
     mainToggle.addEventListener('change', (e) => handleAlarmActiveToggle(alarm.id, e.target.checked));
     
     const toggleSwitch = document.createElement('label');
-    toggleSwitch.htmlFor = `toggle-${alarm.id}`;
+    toggleSwitch.htmlFor = alarm.id;
     toggleSwitch.className = 'toggle-switch';
     
     toggleContainer.appendChild(mainToggle);
@@ -167,7 +156,9 @@ function createAlarmItem(alarm, groupOffForToday) {
     alarmToggle.appendChild(offTodayCheckbox);
     alarmToggle.appendChild(toggleContainer);
 
-    alarmItem.appendChild(alarmInfo);
+    // Assemble the alarm item
+    alarmItem.appendChild(alarmTime);
+    alarmItem.appendChild(alarmLabel);
     alarmItem.appendChild(alarmToggle);
     
     return alarmItem;
@@ -235,13 +226,5 @@ function handleAlarmActiveToggle(alarmId, isActive) {
  */
 document.addEventListener('DOMContentLoaded', function() {
     renderAlarmList();
-    console.log('Enhanced Alarm List initialized - original design preserved');
+    console.log('Enhanced Alarm List initialized - original alarms with grouping');
 });
-
-/**
- * Future enhancements can be added here while maintaining the clean design:
- * - Group management functions
- * - Alarm editing capabilities  
- * - Data persistence
- * - Advanced scheduling features
- */
