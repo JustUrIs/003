@@ -34,6 +34,30 @@ header h1 {
     padding: 0 20px;
 }
 
+/* Group styling - minimal */
+.group-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 15px 0 10px 0;
+    margin-bottom: 5px;
+}
+
+/* "Already woke up" checkbox styling */
+.woke-up-checkbox {
+    width: 14px;
+    height: 14px;
+    accent-color: #ff9500;
+    margin-right: 10px;
+    opacity: 0.8;
+}
+
+.woke-up-checkbox:disabled {
+    opacity: 0.3;
+}
+
 .alarm-item {
     display: flex;
     align-items: center;
@@ -59,12 +83,22 @@ header h1 {
     margin-bottom: 4px;
 }
 
+/* Days display */
+.alarm-days {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .alarm-info {
     flex: 1;
 }
 
 .alarm-toggle {
     margin-left: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .alarm-toggle input[type="checkbox"] {
@@ -100,6 +134,30 @@ header h1 {
 
 .alarm-toggle input[type="checkbox"]:checked + .toggle-switch::after {
     transform: translateX(20px);
+}
+
+/* Alarm states */
+.alarm-item.off-today .alarm-time {
+    color: #666;
+    opacity: 0.6;
+}
+
+.alarm-item.off-today .alarm-label {
+    color: #555;
+    opacity: 0.6;
+}
+
+.alarm-item.off-today .alarm-days {
+    color: #444;
+    opacity: 0.6;
+}
+
+.alarm-item:has(input[type="checkbox"]:not(:checked)) .alarm-time {
+    color: #666;
+}
+
+.alarm-item:has(input[type="checkbox"]:not(:checked)) .alarm-label {
+    color: #444;
 }
 
 .add-alarm-btn {
@@ -139,12 +197,4 @@ header h1 {
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-}
-
-.alarm-item:has(input[type="checkbox"]:not(:checked)) .alarm-time {
-    color: #666;
-}
-
-.alarm-item:has(input[type="checkbox"]:not(:checked)) .alarm-label {
-    color: #444;
 }
