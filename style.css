@@ -34,37 +34,131 @@ header h1 {
     padding: 0 20px;
 }
 
+/* Group styling */
+.alarm-group {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 20px;
+}
+
+.alarm-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Group header styling */
+.group-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+    margin-bottom: 10px;
+}
+
+.group-checkbox {
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
+    accent-color: #34c759;
+    cursor: pointer;
+}
+
+.group-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    flex: 1;
+}
+
+.group-status {
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+}
+
+/* Alarms container */
+.alarms-container {
+    padding-left: 0;
+}
+
+/* Individual alarm item styling */
 .alarm-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 0;
-    border-bottom: 1px solid #333;
+    padding: 15px 0;
+    border-bottom: 1px solid #444;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
 }
 
 .alarm-item:last-child {
     border-bottom: none;
 }
 
+/* Alarm info section */
+.alarm-info {
+    flex: 1;
+}
+
 .alarm-time {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 300;
     color: #fff;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .alarm-label {
     font-size: 14px;
     color: #888;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
-.alarm-info {
-    flex: 1;
+.alarm-days {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+/* Alarm controls section */
+.alarm-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+/* "Off for today" checkbox styling */
+.off-today-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #ff9500;
+    cursor: pointer;
+}
+
+.off-today-checkbox:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.off-today-label {
+    font-size: 11px;
+    color: #888;
+    cursor: pointer;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.off-today-label:has(+ .off-today-checkbox:disabled) {
+    color: #555;
+    cursor: not-allowed;
+}
+
+/* Active/inactive toggle switch (same as before but adjusted) */
 .alarm-toggle {
-    margin-left: 20px;
+    margin-top: 5px;
 }
 
 .alarm-toggle input[type="checkbox"] {
@@ -73,10 +167,10 @@ header h1 {
 
 .toggle-switch {
     display: block;
-    width: 50px;
-    height: 30px;
+    width: 45px;
+    height: 26px;
     background-color: #333;
-    border-radius: 15px;
+    border-radius: 13px;
     position: relative;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -87,8 +181,8 @@ header h1 {
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     background-color: #fff;
     border-radius: 50%;
     transition: transform 0.3s ease;
@@ -99,9 +193,50 @@ header h1 {
 }
 
 .alarm-toggle input[type="checkbox"]:checked + .toggle-switch::after {
-    transform: translateX(20px);
+    transform: translateX(19px);
 }
 
+/* Visual states for alarms */
+.alarm-item.off-for-today {
+    opacity: 0.5;
+    background-color: rgba(255, 149, 0, 0.05);
+}
+
+.alarm-item.off-for-today .alarm-time {
+    color: #888;
+    text-decoration: line-through;
+}
+
+.alarm-item.off-for-today .alarm-label {
+    color: #666;
+}
+
+.alarm-item.off-for-today .alarm-days {
+    color: #444;
+}
+
+.alarm-item.inactive {
+    opacity: 0.6;
+}
+
+.alarm-item.inactive .alarm-time {
+    color: #666;
+}
+
+.alarm-item.inactive .alarm-label {
+    color: #555;
+}
+
+.alarm-item.inactive .alarm-days {
+    color: #444;
+}
+
+/* When both inactive and off for today */
+.alarm-item.inactive.off-for-today {
+    opacity: 0.3;
+}
+
+/* Add alarm button (same as before) */
 .add-alarm-btn {
     position: fixed;
     bottom: 30px;
@@ -142,11 +277,28 @@ header h1 {
     }
 }
 
-/* Disabled alarm styling */
-.alarm-item:has(input[type="checkbox"]:not(:checked)) .alarm-time {
-    color: #666;
-}
-
-.alarm-item:has(input[type="checkbox"]:not(:checked)) .alarm-label {
-    color: #444;
+/* Responsive adjustments for smaller screens */
+@media (max-width: 350px) {
+    .alarm-controls {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .off-today-label {
+        font-size: 10px;
+    }
+    
+    .toggle-switch {
+        width: 40px;
+        height: 22px;
+    }
+    
+    .toggle-switch::after {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .alarm-toggle input[type="checkbox"]:checked + .toggle-switch::after {
+        transform: translateX(18px);
+    }
 }
