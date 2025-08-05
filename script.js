@@ -1,89 +1,63 @@
 /**
- * Alarm List App with Grouping System
- * 
- * This app organizes alarms into groups and provides functionality to:
- * - Toggle individual alarms "off for today" while keeping them active for future days
- * - Toggle entire groups "off for today" 
- * - Maintain a flexible structure for future enhancements
+ * Enhanced Alarm List with Subtle Grouping
+ * Maintains the original iOS/Android clean design while adding group functionality
  */
 
-// Data structure for alarm groups
-// This structure is designed to be flexible for future features like editing, moving alarms between groups, etc.
+// Alarm data with groups - designed to look like the original but with group structure
 const alarmData = {
     groups: [
         {
-            id: 'wake-up',
-            title: 'Wake Up Alarms',
-            offForToday: false, // Group-level "off for today" state
+            id: 'morning',
+            title: 'Morning',
+            offForToday: false,
             alarms: [
                 {
                     id: 'alarm-1',
-                    time: '06:00 AM',
-                    label: 'Early Bird',
-                    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], // Days this alarm is scheduled
-                    isActive: true, // Whether alarm is generally active
-                    offForToday: false // Whether alarm is off for today specifically
+                    time: '07:00 AM',
+                    label: 'Weekdays',
+                    isActive: true,
+                    offForToday: false
                 },
                 {
                     id: 'alarm-2',
-                    time: '06:30 AM',
-                    label: 'Regular Wake Up',
-                    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                    time: '08:30 AM',
+                    label: 'Work Meeting',
                     isActive: true,
                     offForToday: false
-                },
+                }
+            ]
+        },
+        {
+            id: 'afternoon',
+            title: 'Afternoon',
+            offForToday: false,
+            alarms: [
                 {
                     id: 'alarm-3',
-                    time: '07:00 AM',
-                    label: 'Weekend Sleep In',
-                    days: ['Sat', 'Sun'],
-                    isActive: true,
+                    time: '10:00 AM',
+                    label: 'Coffee Break',
+                    isActive: false,
                     offForToday: false
-                }
-            ]
-        },
-        {
-            id: 'work-reminders',
-            title: 'Work Reminders',
-            offForToday: false,
-            alarms: [
+                },
                 {
                     id: 'alarm-4',
-                    time: '08:30 AM',
-                    label: 'Team Meeting',
-                    days: ['Mon', 'Wed', 'Fri'],
-                    isActive: true,
-                    offForToday: false
-                },
-                {
-                    id: 'alarm-5',
-                    time: '12:00 PM',
-                    label: 'Lunch Break',
-                    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                    time: '06:30 PM',
+                    label: 'Gym Time',
                     isActive: true,
                     offForToday: false
                 }
             ]
         },
         {
-            id: 'evening-routine',
-            title: 'Evening Routine',
+            id: 'evening',
+            title: 'Evening',
             offForToday: false,
             alarms: [
                 {
-                    id: 'alarm-6',
-                    time: '06:30 PM',
-                    label: 'Gym Time',
-                    days: ['Mon', 'Wed', 'Fri'],
-                    isActive: true,
-                    offForToday: false
-                },
-                {
-                    id: 'alarm-7',
+                    id: 'alarm-5',
                     time: '09:00 PM',
                     label: 'Wind Down',
-                    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    isActive: true,
+                    isActive: false,
                     offForToday: false
                 }
             ]
@@ -92,74 +66,60 @@ const alarmData = {
 };
 
 /**
- * Renders the entire alarm list with groups and alarms
+ * Renders the alarm list maintaining the original design aesthetic
  */
 function renderAlarmList() {
     const container = document.getElementById('alarmList');
     container.innerHTML = '';
 
     alarmData.groups.forEach(group => {
-        // Create group container
-        const groupElement = document.createElement('div');
-        groupElement.className = 'alarm-group';
-        
-        // Create group header with checkbox
+        // Create subtle group header
         const groupHeader = document.createElement('div');
         groupHeader.className = 'group-header';
         
-        // Group checkbox (for "off for today" functionality)
-        const groupCheckbox = document.createElement('input');
-        groupCheckbox.type = 'checkbox';
-        groupCheckbox.id = `group-${group.id}`;
-        groupCheckbox.className = 'group-checkbox';
-        groupCheckbox.checked = group.offForToday;
-        groupCheckbox.addEventListener('change', (e) => handleGroupToggle(group.id, e.target.checked));
-        
-        // Group title
-        const groupTitle = document.createElement('h2');
+        const groupTitle = document.createElement('div');
         groupTitle.className = 'group-title';
         groupTitle.textContent = group.title;
         
-        // Group status indicator
-        const groupStatus = document.createElement('span');
-        groupStatus.className = 'group-status';
-        groupStatus.textContent = group.offForToday ? '(Off for today)' : '';
+        // Small group checkbox for "off today" functionality
+        const groupCheckbox = document.createElement('input');
+        groupCheckbox.type = 'checkbox';
+        groupCheckbox.className = 'group-checkbox';
+        groupCheckbox.checked = group.offForToday;
+        groupCheckbox.title = `Mark all ${group.title.toLowerCase()} alarms off for today`;
+        groupCheckbox.addEventListener('change', (e) => handleGroupToggle(group.id, e.target.checked));
         
-        groupHeader.appendChild(groupCheckbox);
         groupHeader.appendChild(groupTitle);
-        groupHeader.appendChild(groupStatus);
-        groupElement.appendChild(groupHeader);
-
-        // Create alarm items for this group
-        const alarmsContainer = document.createElement('div');
-        alarmsContainer.className = 'alarms-container';
+        groupHeader.appendChild(groupCheckbox);
         
+        // Create group container
+        const groupContainer = document.createElement('div');
+        groupContainer.className = 'alarm-group';
+        groupContainer.appendChild(groupHeader);
+        
+        // Add alarms to this group
         group.alarms.forEach(alarm => {
             const alarmItem = createAlarmItem(alarm, group.offForToday);
-            alarmsContainer.appendChild(alarmItem);
+            groupContainer.appendChild(alarmItem);
         });
         
-        groupElement.appendChild(alarmsContainer);
-        container.appendChild(groupElement);
+        container.appendChild(groupContainer);
     });
 }
 
 /**
- * Creates an individual alarm item element
+ * Creates an alarm item that looks exactly like the original design
  */
 function createAlarmItem(alarm, groupOffForToday) {
     const alarmItem = document.createElement('div');
     alarmItem.className = 'alarm-item';
     
-    // Add visual state classes
+    // Apply visual states
     if (alarm.offForToday || groupOffForToday) {
         alarmItem.classList.add('off-for-today');
     }
-    if (!alarm.isActive) {
-        alarmItem.classList.add('inactive');
-    }
 
-    // Alarm info section
+    // Left side - alarm info (exactly like original)
     const alarmInfo = document.createElement('div');
     alarmInfo.className = 'alarm-info';
     
@@ -171,110 +131,87 @@ function createAlarmItem(alarm, groupOffForToday) {
     alarmLabel.className = 'alarm-label';
     alarmLabel.textContent = alarm.label;
     
-    const alarmDays = document.createElement('div');
-    alarmDays.className = 'alarm-days';
-    alarmDays.textContent = alarm.days.join(', ');
-    
     alarmInfo.appendChild(alarmTime);
     alarmInfo.appendChild(alarmLabel);
-    alarmInfo.appendChild(alarmDays);
 
-    // Alarm controls section
-    const alarmControls = document.createElement('div');
-    alarmControls.className = 'alarm-controls';
+    // Right side - controls (small checkbox + main toggle, like original)
+    const alarmToggle = document.createElement('div');
+    alarmToggle.className = 'alarm-toggle';
     
-    // "Off for today" checkbox
+    // Small "off today" checkbox (subtle, minimal)
     const offTodayCheckbox = document.createElement('input');
     offTodayCheckbox.type = 'checkbox';
-    offTodayCheckbox.id = `off-today-${alarm.id}`;
     offTodayCheckbox.className = 'off-today-checkbox';
     offTodayCheckbox.checked = alarm.offForToday;
-    offTodayCheckbox.disabled = groupOffForToday; // Disable if group is off for today
+    offTodayCheckbox.disabled = groupOffForToday;
+    offTodayCheckbox.title = 'Off for today';
     offTodayCheckbox.addEventListener('change', (e) => handleAlarmOffTodayToggle(alarm.id, e.target.checked));
     
-    const offTodayLabel = document.createElement('label');
-    offTodayLabel.htmlFor = `off-today-${alarm.id}`;
-    offTodayLabel.className = 'off-today-label';
-    offTodayLabel.textContent = 'Off today';
+    // Main toggle switch container (exactly like original)
+    const toggleContainer = document.createElement('div');
+    toggleContainer.className = 'toggle-switch-container';
     
-    // Active/inactive toggle switch
-    const activeToggle = document.createElement('div');
-    activeToggle.className = 'alarm-toggle';
-    
-    const activeCheckbox = document.createElement('input');
-    activeCheckbox.type = 'checkbox';
-    activeCheckbox.id = `active-${alarm.id}`;
-    activeCheckbox.checked = alarm.isActive;
-    activeCheckbox.addEventListener('change', (e) => handleAlarmActiveToggle(alarm.id, e.target.checked));
+    const mainToggle = document.createElement('input');
+    mainToggle.type = 'checkbox';
+    mainToggle.id = `toggle-${alarm.id}`;
+    mainToggle.checked = alarm.isActive;
+    mainToggle.addEventListener('change', (e) => handleAlarmActiveToggle(alarm.id, e.target.checked));
     
     const toggleSwitch = document.createElement('label');
-    toggleSwitch.htmlFor = `active-${alarm.id}`;
+    toggleSwitch.htmlFor = `toggle-${alarm.id}`;
     toggleSwitch.className = 'toggle-switch';
     
-    activeToggle.appendChild(activeCheckbox);
-    activeToggle.appendChild(toggleSwitch);
+    toggleContainer.appendChild(mainToggle);
+    toggleContainer.appendChild(toggleSwitch);
     
-    alarmControls.appendChild(offTodayCheckbox);
-    alarmControls.appendChild(offTodayLabel);
-    alarmControls.appendChild(activeToggle);
+    alarmToggle.appendChild(offTodayCheckbox);
+    alarmToggle.appendChild(toggleContainer);
 
     alarmItem.appendChild(alarmInfo);
-    alarmItem.appendChild(alarmControls);
+    alarmItem.appendChild(alarmToggle);
     
     return alarmItem;
 }
 
 /**
- * Handles toggling a group "off for today"
- * When a group is turned off for today, all its alarms are also considered off for today
+ * Handles group "off for today" toggle
  */
 function handleGroupToggle(groupId, isOffForToday) {
     const group = alarmData.groups.find(g => g.id === groupId);
     if (group) {
         group.offForToday = isOffForToday;
+        renderAlarmList();
         
-        // If group is turned off for today, we don't need to change individual alarm states
-        // The rendering logic will handle the visual representation
-        // This preserves individual alarm "off for today" states for when the group is turned back on
-        
-        renderAlarmList(); // Re-render to update UI
-        
-        console.log(`Group "${group.title}" ${isOffForToday ? 'turned off' : 'turned on'} for today`);
+        console.log(`${group.title} group ${isOffForToday ? 'turned off' : 'turned on'} for today`);
     }
 }
 
 /**
- * Handles toggling an individual alarm "off for today"
- * This simulates the user marking an alarm as completed for today while keeping it active for future days
+ * Handles individual alarm "off for today" toggle
  */
 function handleAlarmOffTodayToggle(alarmId, isOffForToday) {
-    // Find the alarm across all groups
     let targetAlarm = null;
-    let targetGroup = null;
     
     for (const group of alarmData.groups) {
         const alarm = group.alarms.find(a => a.id === alarmId);
         if (alarm) {
             targetAlarm = alarm;
-            targetGroup = group;
             break;
         }
     }
     
     if (targetAlarm) {
         targetAlarm.offForToday = isOffForToday;
-        renderAlarmList(); // Re-render to update UI
+        renderAlarmList();
         
-        console.log(`Alarm "${targetAlarm.label}" at ${targetAlarm.time} ${isOffForToday ? 'turned off' : 'turned on'} for today`);
+        console.log(`${targetAlarm.label} (${targetAlarm.time}) ${isOffForToday ? 'off' : 'on'} for today`);
     }
 }
 
 /**
- * Handles toggling an alarm's general active/inactive state
- * This is different from "off for today" - this affects whether the alarm is active at all
+ * Handles main alarm active/inactive toggle
  */
 function handleAlarmActiveToggle(alarmId, isActive) {
-    // Find the alarm across all groups
     let targetAlarm = null;
     
     for (const group of alarmData.groups) {
@@ -287,46 +224,24 @@ function handleAlarmActiveToggle(alarmId, isActive) {
     
     if (targetAlarm) {
         targetAlarm.isActive = isActive;
-        renderAlarmList(); // Re-render to update UI
+        renderAlarmList();
         
-        console.log(`Alarm "${targetAlarm.label}" at ${targetAlarm.time} ${isActive ? 'activated' : 'deactivated'}`);
+        console.log(`${targetAlarm.label} (${targetAlarm.time}) ${isActive ? 'activated' : 'deactivated'}`);
     }
 }
 
 /**
- * Initialize the app when the DOM is loaded
+ * Initialize the app
  */
 document.addEventListener('DOMContentLoaded', function() {
     renderAlarmList();
-    
-    // Log initial state for demonstration
-    console.log('Alarm List App initialized with grouping system');
-    console.log('Data structure:', alarmData);
+    console.log('Enhanced Alarm List initialized - original design preserved');
 });
 
 /**
- * Future Enhancement Areas (for reference):
- * 
- * 1. Group Management:
- *    - Add function to create new groups
- *    - Add function to rename groups
- *    - Add function to delete groups
- *    - Add drag-and-drop to move alarms between groups
- * 
- * 2. Alarm Management:
- *    - Add function to create new alarms
- *    - Add function to edit existing alarms
- *    - Add function to delete alarms
- *    - Add time picker for setting alarm times
- *    - Add day selector for choosing which days alarm is active
- * 
- * 3. Persistence:
- *    - Save/load alarm data to/from localStorage
- *    - Export/import alarm configurations
- * 
- * 4. Advanced Features:
- *    - Snooze functionality
- *    - Different alarm sounds per alarm/group
- *    - Smart grouping based on time or frequency
- *    - Calendar integration
+ * Future enhancements can be added here while maintaining the clean design:
+ * - Group management functions
+ * - Alarm editing capabilities  
+ * - Data persistence
+ * - Advanced scheduling features
  */
